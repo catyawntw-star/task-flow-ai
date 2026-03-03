@@ -21,8 +21,8 @@ export default function Home() {
     
     for (let i = 0; i < cats; i++) {
       let price = basePrice;
-      if (i === 1) price = basePrice - 100; // 2nd cat is 300
-      if (i >= 2) price = basePrice - 200; // 3rd+ cat is 200
+      if (i === 1) price = basePrice - 150; // 2nd cat is 250
+      if (i >= 2) price = basePrice - 250; // 3rd+ cat is 150
       
       dailyRatePerCat.push(price);
       totalDailyBase += price;
@@ -32,9 +32,9 @@ export default function Home() {
 
     // 2. Calculate long-stay discount
     let discountPercent = 0;
-    if (nights >= 30) discountPercent = 0.20;
-    else if (nights >= 15) discountPercent = 0.15;
-    else if (nights >= 7) discountPercent = 0.10;
+    if (nights >= 30) discountPercent = 0.35;
+    else if (nights >= 15) discountPercent = 0.25;
+    else if (nights >= 7) discountPercent = 0.15;
 
     const discountAmount = subtotalBeforeNightsDiscount * discountPercent;
     const finalTotal = subtotalBeforeNightsDiscount - discountAmount;
@@ -128,11 +128,11 @@ export default function Home() {
                     </div>
                     <div className="bg-secondary/10 text-secondary p-3 rounded-xl text-center border border-secondary/20">
                       <div className="text-xs font-bold mb-1">第 2 隻</div>
-                      <div className="font-bold text-lg">300<span className="text-xs">/晚</span></div>
+                      <div className="font-bold text-lg">250<span className="text-xs">/晚</span></div>
                     </div>
                     <div className="bg-accent/30 text-accent-foreground p-3 rounded-xl text-center border border-accent/50">
                       <div className="text-xs font-bold mb-1">第 3 隻起</div>
-                      <div className="font-bold text-lg">200<span className="text-xs">/晚</span></div>
+                      <div className="font-bold text-lg">150<span className="text-xs">/晚</span></div>
                     </div>
                   </div>
                 </div>
@@ -147,7 +147,7 @@ export default function Home() {
                   住宿天數
                 </CardTitle>
                 <CardDescription className="text-base">
-                  住越久，折扣越多！最高享 8 折優惠
+                  住越久，折扣越多！最高享 65 折優惠
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -178,9 +178,9 @@ export default function Home() {
                   <div className="space-y-2">
                     {[
                       { range: '1-6 晚', discount: '原價', active: nights < 7 },
-                      { range: '7-14 晚', discount: '9 折 (10% off)', active: nights >= 7 && nights < 15 },
-                      { range: '15-29 晚', discount: '85 折 (15% off)', active: nights >= 15 && nights < 30 },
-                      { range: '30 晚以上', discount: '8 折 (20% off)', active: nights >= 30 }
+                      { range: '7-14 晚', discount: '85 折 (15% off)', active: nights >= 7 && nights < 15 },
+                      { range: '15-29 晚', discount: '75 折 (25% off)', active: nights >= 15 && nights < 30 },
+                      { range: '30 晚以上', discount: '65 折 (35% off)', active: nights >= 30 }
                     ].map((rule, idx) => (
                       <div 
                         key={idx} 
