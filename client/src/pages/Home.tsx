@@ -34,7 +34,8 @@ export default function Home() {
     let discountPercent = 0;
     if (nights >= 30) discountPercent = 0.35;
     else if (nights >= 15) discountPercent = 0.25;
-    else if (nights >= 7) discountPercent = 0.15;
+    else if (nights >= 10) discountPercent = 0.10;
+    else if (nights >= 5) discountPercent = 0.05;
 
     const discountAmount = subtotalBeforeNightsDiscount * discountPercent;
     const finalTotal = subtotalBeforeNightsDiscount - discountAmount;
@@ -177,8 +178,9 @@ export default function Home() {
                   <h4 className="font-bold text-sm text-muted-foreground uppercase tracking-wider">長住優惠規則</h4>
                   <div className="space-y-2">
                     {[
-                      { range: '1-6 晚', discount: '原價', active: nights < 7 },
-                      { range: '7-14 晚', discount: '85 折 (15% off)', active: nights >= 7 && nights < 15 },
+                      { range: '1-4 晚', discount: '原價', active: nights < 5 },
+                      { range: '5-9 晚', discount: '95 折 (5% off)', active: nights >= 5 && nights < 10 },
+                      { range: '10-14 晚', discount: '9 折 (10% off)', active: nights >= 10 && nights < 15 },
                       { range: '15-29 晚', discount: '75 折 (25% off)', active: nights >= 15 && nights < 30 },
                       { range: '30 晚以上', discount: '65 折 (35% off)', active: nights >= 30 }
                     ].map((rule, idx) => (
