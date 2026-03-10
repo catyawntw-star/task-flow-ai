@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import { Plus, Minus, Cat, CalendarDays, Coins, CheckCircle2, TrendingDown } from "lucide-react";
+import { Plus, Minus, Cat, CalendarDays, Coins, CheckCircle2, TrendingDown, Home as HomeIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import catBg from "@/assets/images/cat-hotel-bg.png";
 
@@ -11,37 +11,32 @@ export default function Home() {
   const [cats, setCats] = useState(1);
   const [nights, setNights] = useState(1);
 
-  const basePrice = 400;
+  // New Pricing Model: Base Room + Per Cat Fee
+  const roomBasePrice = 200;
+  const perCatFee = 200;
 
   // Calculate pricing
   const calculation = useMemo(() => {
-    // 1. Calculate base daily rate per cat (Multi-cat discount)
-    let dailyRatePerCat = [];
-    let totalDailyBase = 0;
-    
-    for (let i = 0; i < cats; i++) {
-      let price = basePrice;
-      if (i === 1) price = basePrice - 100; // 2nd cat is 300
-      if (i >= 2) price = basePrice - 200; // 3rd+ cat is 200
-      
-      dailyRatePerCat.push(price);
-      totalDailyBase += price;
-    }
+    // 1. Calculate base daily rate: Room (200) + (Cats * 200)
+    const dailyRoomFee = roomBasePrice;
+    const dailyCatsFee = cats * perCatFee;
+    const totalDailyBase = dailyRoomFee + dailyCatsFee;
 
     const subtotalBeforeNightsDiscount = totalDailyBase * nights;
 
-    // 2. Calculate long-stay discount
+    // 2. Calculate long-stay discount (Only goes down to 8折 to protect margins)
     let discountPercent = 0;
-    if (nights >= 30) discountPercent = 0.35;
-    else if (nights >= 15) discountPercent = 0.25;
-    else if (nights >= 10) discountPercent = 0.10;
-    else if (nights >= 5) discountPercent = 0.05;
+    if (nights >= 30) discountPercent = 0.20; // 8折
+    else if (nights >= 15) discountPercent = 0.15; // 85折
+    else if (nights >= 10) discountPercent = 0.10; // 9折
+    else if (nights >= 5) discountPercent = 0.05;  // 95折
 
     const discountAmount = subtotalBeforeNightsDiscount * discountPercent;
     const finalTotal = subtotalBeforeNightsDiscount - discountAmount;
 
     return {
-      dailyRatePerCat,
+      dailyRoomFee,
+      dailyCatsFee,
       totalDailyBase,
       subtotalBeforeNightsDiscount,
       discountPercent,
@@ -121,21 +116,26 @@ export default function Home() {
                 </div>
 
                 <div className="mt-6 space-y-3">
-                  <h4 className="font-bold text-sm text-muted-foreground uppercase tracking-wider">多貓計費規則</h4>
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="bg-primary/10 text-primary p-3 rounded-xl text-center border border-primary/20">
-                      <div className="text-xs font-bold mb-1">第 1 隻</div>
-                      <div className="font-bold text-lg">400<span className="text-xs">/晚</span></div>
+                  <h4 className="font-bold text-sm text-muted-foreground uppercase tracking-wider">計費邏輯：基本房費 + 貓口照護費</h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-primary/10 text-primary p-4 rounded-xl border border-primary/20 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <HomeIcon size={20} />
+                        <span className="font-bold">空間房費</span>
+                      </div>
+                      <div className="font-bold text-xl">200<span className="text-xs font-normal">/晚</span></div>
                     </div>
-                    <div className="bg-secondary/10 text-secondary p-3 rounded-xl text-center border border-secondary/20">
-                      <div className="text-xs font-bold mb-1">第 2 隻</div>
-                      <div className="font-bold text-lg">300<span className="text-xs">/晚</span></div>
-                    </div>
-                    <div className="bg-accent/30 text-accent-foreground p-3 rounded-xl text-center border border-accent/50">
-                      <div className="text-xs font-bold mb-1">第 3 隻起</div>
-                      <div className="font-bold text-lg">200<span className="text-xs">/晚</span></div>
+                    <div className="bg-secondary/10 text-secondary p-4 rounded-xl border border-secondary/20 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Cat size={20} />
+                        <span className="font-bold">每貓照護費</span>
+                      </div>
+                      <div className="font-bold text-xl">200<span className="text-xs font-normal">/晚</span></div>
                     </div>
                   </div>
+                  <p className="text-xs text-muted-foreground mt-2 text-center bg-muted/30 py-2 rounded-lg">
+                    💡 1隻貓=400元/晚。2隻同房=600元/晚。3隻同房=800元/晚。
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -229,15 +229,20 @@ export default function Home() {
                   <div>
                     <h4 className="font-bold text-sm text-muted-foreground mb-3 border-b pb-2">計費明細 ({nights}晚)</h4>
                     <div className="space-y-3">
-                      {calculation.dailyRatePerCat.map((rate, idx) => (
-                        <div key={idx} className="flex justify-between items-center text-sm">
-                          <span>第 {idx + 1} 隻貓</span>
-                          <div className="flex items-center gap-4">
-                            <span className="text-muted-foreground">${rate} × {nights}</span>
-                            <span className="font-bold w-16 text-right">${(rate * nights).toLocaleString()}</span>
-                          </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span>基礎房費 (共用空間)</span>
+                        <div className="flex items-center gap-4">
+                          <span className="text-muted-foreground">${calculation.dailyRoomFee} × {nights}</span>
+                          <span className="font-bold w-16 text-right">${(calculation.dailyRoomFee * nights).toLocaleString()}</span>
                         </div>
-                      ))}
+                      </div>
+                      <div className="flex justify-between items-center text-sm text-primary">
+                        <span>貓口照護費 ({cats}隻)</span>
+                        <div className="flex items-center gap-4">
+                          <span className="text-primary/70">${calculation.dailyCatsFee} × {nights}</span>
+                          <span className="font-bold w-16 text-right">${(calculation.dailyCatsFee * nights).toLocaleString()}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -267,10 +272,10 @@ export default function Home() {
               {/* Tips */}
               <div className="mt-6 bg-accent/20 border border-accent rounded-2xl p-4">
                 <h4 className="font-bold flex items-center gap-2 mb-2 text-foreground">
-                  <span className="text-xl">💡</span> 經營建議
+                  <span className="text-xl">💡</span> 老闆經營建議
                 </h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  這個方案將「多貓」與「長住」分開折扣。多貓折扣直接反映在每日單價上，長住折扣則是總價結算。這能讓客人感覺到<strong>「雙重優惠」</strong>，刺激他們帶多隻貓來，且住更久！
+                  改用<strong>「基本房費 + 貓口費」</strong>的好處是：多貓同住時，您可以確保「每隻貓的清消與照顧成本」都有確實收回（不會因為打折而變成做白工）。這個邏輯對客人來說也很公平，因為他們只付了一次房間的錢。
                 </p>
               </div>
             </div>
