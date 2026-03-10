@@ -21,8 +21,8 @@ export default function Home() {
     
     for (let i = 0; i < cats; i++) {
       let price = basePrice;
-      if (i === 1) price = basePrice - 150; // 2nd cat is 250
-      if (i >= 2) price = basePrice - 250; // 3rd+ cat is 150
+      if (i === 1) price = basePrice - 100; // 2nd cat is 300
+      if (i >= 2) price = basePrice - 200; // 3rd+ cat is 200
       
       dailyRatePerCat.push(price);
       totalDailyBase += price;
@@ -129,11 +129,11 @@ export default function Home() {
                     </div>
                     <div className="bg-secondary/10 text-secondary p-3 rounded-xl text-center border border-secondary/20">
                       <div className="text-xs font-bold mb-1">第 2 隻</div>
-                      <div className="font-bold text-lg">250<span className="text-xs">/晚</span></div>
+                      <div className="font-bold text-lg">300<span className="text-xs">/晚</span></div>
                     </div>
                     <div className="bg-accent/30 text-accent-foreground p-3 rounded-xl text-center border border-accent/50">
                       <div className="text-xs font-bold mb-1">第 3 隻起</div>
-                      <div className="font-bold text-lg">150<span className="text-xs">/晚</span></div>
+                      <div className="font-bold text-lg">200<span className="text-xs">/晚</span></div>
                     </div>
                   </div>
                 </div>
