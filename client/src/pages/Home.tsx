@@ -134,7 +134,7 @@ export default function Home() {
                     </div>
                   </div>
                   <p className="text-xs text-muted-foreground mt-2 text-center bg-muted/30 py-2 rounded-lg">
-                    💡 1隻貓=500元/晚。2隻同房=600元/晚。3隻同房=800元/晚。
+                    💡 1隻貓=499元/晚。2隻同房=600元/晚。3隻同房=800元/晚。
                   </p>
                 </div>
               </CardContent>
