@@ -12,12 +12,12 @@ export default function Home() {
   const [nights, setNights] = useState(1);
 
   // New Pricing Model: Base Room + Per Cat Fee
-  const roomBasePrice = 200;
+  const roomBasePrice = 499;
   const perCatFee = 200;
 
   // Calculate pricing
   const calculation = useMemo(() => {
-    // 1. Calculate base daily rate: Room (200) + (Cats * 200)
+    // 1. Calculate base daily rate: Room (499) + (Cats * 200)
     const dailyRoomFee = roomBasePrice;
     const dailyCatsFee = cats * perCatFee;
     const totalDailyBase = dailyRoomFee + dailyCatsFee;
